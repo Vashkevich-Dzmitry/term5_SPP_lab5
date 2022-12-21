@@ -22,9 +22,31 @@ namespace DependencyInjector
             throw new NotImplementedException();
         }
 
-        public void Register<TDependency, TImplementation>(bool isSingleton)
+        public void Register<TDependency, TImplementation>(bool isSingleton = false)
         {
-            throw new NotImplementedException();
+            Register(typeof(TDependency), typeof(TImplementation), isSingleton);
+        }
+
+        public void Register(Type tDependency, Type tImplementation, bool isSingleton = false)
+        {
+            if (tImplementation.IsAbstract)
+            {
+                throw new ArgumentException("Implementation is abstract");
+            }
+
+            if (!tDependency.IsAssignableFrom(tImplementation)
+                && !tDependency.IsGenericTypeDefinition
+                && !tImplementation.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("Dependency is not assignable from implementation");
+            }
+
+            if (!ImplementationsDictionary.TryGetValue(tDependency, out List<Implementation> dependencyImplementations))
+            {
+                dependencyImplementations = new List<Implementation>();
+                ImplementationsDictionary[tDependency] = dependencyImplementations;
+            }
+            dependencyImplementations.Add(new Implementation(tImplementation, isSingleton));
         }
     }
 }
