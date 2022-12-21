@@ -24,9 +24,4 @@ namespace Tests.Classes
             RecursiveDependency = recursiveDependency;
         }
     }
-
-    public class AnotherClass
-    {
-
-    }
 }
