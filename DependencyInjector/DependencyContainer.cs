@@ -21,7 +21,7 @@
             Register(typeof(TDependency), typeof(TImplementation), isSingleton);
         }
 
-        public void Register(Type tDependency, Type tImplementation, bool isSingleton = false)
+        private void Register(Type tDependency, Type tImplementation, bool isSingleton = false)
         {
             if (tImplementation.IsAbstract)
             {
@@ -136,8 +136,7 @@
                 var genericArguments = type.GetGenericArguments();
                 var genericParams = genericArguments.Select(dependency =>
                 {
-                    var implementations = DConfig
-                        .GetImplementationsForDependency(dependency.BaseType!)?.ToArray();
+                    var implementations = GetImplementationsForDependency(dependency.BaseType!)?.ToArray();
                     if (implementations == null)
                     {
                         return dependency.BaseType;
