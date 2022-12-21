@@ -19,7 +19,7 @@ namespace DependencyInjector
 
         public TDependency Resolve<TDependency>()
         {
-            throw new NotImplementedException();
+            return (TDependency)Resolve(typeof(TDependency));
         }
 
         public void Register<TDependency, TImplementation>(bool isSingleton = false)
@@ -47,6 +47,44 @@ namespace DependencyInjector
                 ImplementationsDictionary[tDependency] = dependencyImplementations;
             }
             dependencyImplementations.Add(new Implementation(tImplementation, isSingleton));
+        }
+        private object? Resolve(Type tDependency)
+        {
+            if (RecursionStack.Contains(tDependency))
+            {
+                throw new StackOverflowException("Recursion");
+            }
+            RecursionStack.Push(tDependency);
+
+            if (!ImplementationsDictionary.Any())
+            {
+                return null;
+            }
+
+            object? result;
+            if (tDependency.IsGenericType &&
+                tDependency.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+
+            }
+            else
+            {
+                if (tDependency.IsGenericType &&
+                    ImplementationsDictionary.ContainsKey(tDependency.GetGenericTypeDefinition()))
+                {
+                    
+                }
+                else
+                {
+                    if (ImplementationsDictionary.ContainsKey(tDependency))
+                    {
+                        
+                    }
+                }
+                
+            }
+            RecursionStack.Pop();
+            return result;
         }
     }
 }
